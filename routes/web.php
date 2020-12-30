@@ -22,5 +22,7 @@ Route::get('about', function () {
     return view('about');
 });
 
-Route::get('costumers',[CostumersController::class, 'list']);
+Route::get('costumers',[CostumersController::class,'index']);
+Route::get('/costumers/create',[CostumersController::class, 'create']);
 Route::post('costumers',[CostumersController::class,'store']);
+
