@@ -9,27 +9,21 @@
         <p><a href="/costumers/create">Add new costumer</a></p>
     </div>
 </div>
+@foreach($costumers as $costumer)
+
 <div class="row">
-    <div class="col-6">
-        <h3>Active Customers</h3>
-        <ul>
-            @foreach($activeCostumers as $activecostumer)
-            <li>{{$activecostumer->name}} <span class="text-muted">({{$activecostumer->company->name}})</span></li>
-            @endforeach
-
-        </ul>
+    <div class="col-2">
+        {{$costumer->id}}
     </div>
-    <div class="col-6">
-        <ul>
-        <h3>Inactive Customers</h3>
-
-            @foreach($inactiveCostumers as $inactivecostumer)
-            <li>{{$inactivecostumer->name}} <span class="text-muted">({{$inactivecostumer->company->name}}) </span></li>
-            @endforeach
-
-        </ul>
+    <div class="col-4">
+        <a href="/costumers/{{$costumer->id}}">{{$costumer->name}}</a>    
     </div>
- 
+
+    <div class="col-4">
+        {{$costumer->company->name}}
+    </div>
+    <div class="col-2">{{$costumer->active}}</div>
 </div>
+@endforeach
 
 @endsection

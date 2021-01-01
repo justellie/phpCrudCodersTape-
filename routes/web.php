@@ -23,6 +23,9 @@ Route::get('about', function () {
 });
 
 Route::get('costumers',[CostumersController::class,'index']);
-Route::get('/costumers/create',[CostumersController::class, 'create']);
+Route::get('costumers/create',[CostumersController::class, 'create']);
 Route::post('costumers',[CostumersController::class,'store']);
-
+Route::get('costumers/{costumer}',[CostumersController::class,'show']);
+Route::get('costumers/{costumer}/edit',[CostumersController::class,'edit']);
+Route::patch('costumers/{costumer}',[CostumersController::class,'update']);
+Route::delete('costumers/{costumer}',[CostumersController::class,'destroy']);
