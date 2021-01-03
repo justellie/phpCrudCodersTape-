@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\ContactFormController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\CostumersController;
 
 /*
@@ -17,11 +19,12 @@ use App\Http\Controllers\CostumersController;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::view('contact','contact');//otra version [nombreRuta,nombreVista]
-Route::get('about', function () {
-    return view('about');
-});
 
+Route::view('about','about');//->middleware('test');
+
+Route::get('contact-us',[ContactFormController::class,'create'])->name('contact.create');
+Route::post('contact-us',[ContactFormController::class,'store'])->name('contact.store');
+/*
 Route::get('costumers',[CostumersController::class,'index']);
 Route::get('costumers/create',[CostumersController::class, 'create']);
 Route::post('costumers',[CostumersController::class,'store']);
@@ -29,3 +32,9 @@ Route::get('costumers/{costumer}',[CostumersController::class,'show']);
 Route::get('costumers/{costumer}/edit',[CostumersController::class,'edit']);
 Route::patch('costumers/{costumer}',[CostumersController::class,'update']);
 Route::delete('costumers/{costumer}',[CostumersController::class,'destroy']);
+*/
+Route::resource('costumers', CostumersController::class);//->middleware('auth');
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);//->name('home');
+

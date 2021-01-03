@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 @section('title','Edit Details for'.$costumer->name)
 @section('content')
 <div class="row">
@@ -8,7 +8,7 @@
 </div>
 <div class="row">
     <div class="col-12">
-        <form action="/costumers/{{$costumer->id}}" method="POST" class="pb-5">
+        <form action="{{route('costumers.update',['costumer'=>$costumer] )}}" method="POST" class="pb-5">
                 @method('PATCH')
                 @include('costumers.form')
             <button type="submit" class="btn btn-primary">Save Costumer</button>

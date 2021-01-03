@@ -12,7 +12,11 @@ use function PHPUnit\Framework\returnSelf;
 class CostumersController extends Controller
 {
 
-  
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index']);
+    }
+
     public function index()
     {
         $costumers=Costumer::all();
