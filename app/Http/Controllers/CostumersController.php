@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewCostumerHasRegisteredEvent;
 use App\Models\Costumer;
 use App\Models\Company;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -35,8 +37,8 @@ class CostumersController extends Controller
     public function store()
     {
         $data=$this->validateRequest();
-        Costumer::create($data);
-        
+        $costumer=Costumer::create($data);
+        event(new NewCostumerHasRegisteredEvent($costumer));
         return redirect('/costumers');
     }
     public function show(Costumer $costumer)
