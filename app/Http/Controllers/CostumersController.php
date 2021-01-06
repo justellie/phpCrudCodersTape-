@@ -27,6 +27,7 @@ class CostumersController extends Controller
     }
     public function create()
     {
+        //paso costumer vacio para que haya algo que mostrar en el formulario
         $companies=Company::all();
         $costumer=new Costumer();
         //dd($costumer);
@@ -37,7 +38,12 @@ class CostumersController extends Controller
     public function store()
     {
         $data=$this->validateRequest();
+
+
         $costumer=Costumer::create($data);
+
+        $this->storeImage($costumer);
+
         event(new NewCostumerHasRegisteredEvent($costumer));
         return redirect('/costumers');
     }
@@ -56,24 +62,46 @@ class CostumersController extends Controller
     public function update(Costumer $costumer)
     {
             $costumer->update($this->validateRequest());
+            $this->storeImage($costumer);
+
             return redirect('/costumers/'.$costumer->id);
         
     }
 
     private function validateRequest()
     {
-        return request()->validate([
+       return tap(request()->validate([
+
             'name'=>'required',
             'email'=>'required|email',
             'active'=>'required',
-            'company_id'=>'required'
-            ]);
+            'company_id'=>'required',
 
+            ]), function () {
+
+            if (request()->hasFile('image')) {
+                request()->validate([
+                    'image' => 'file|image|max:5000',
+                ]);
+            }
+
+            });
+                
     }  
     public function destroy(Costumer $costumer) 
     {
         $costumer->delete();
         return redirect('/costumers');   
+    }
+    
+    public function storeImage(Costumer $costumer)
+    {
+        if(request()->has('image'))
+        {
+            $costumer->update([
+                'image'=>request()->file('image')->store('uploads','public'),
+            ]);
+        }
     }
 
 }

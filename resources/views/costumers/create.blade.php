@@ -10,7 +10,7 @@
 </div>
 <div class="row">
     <div class="col-12">
-        <form action="/costumers" method="POST" class="pb-5">
+        <form action="/costumers" method="POST" enctype="multipart/form-data" class="pb-5" >
                 @include('costumers.form')
             <button type="submit" class="btn btn-primary">Add Costumer</button>
         </form>

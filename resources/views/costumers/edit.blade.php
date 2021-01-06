@@ -8,7 +8,7 @@
 </div>
 <div class="row">
     <div class="col-12">
-        <form action="{{route('costumers.update',['costumer'=>$costumer] )}}" method="POST" class="pb-5">
+        <form action="{{route('costumers.update',['costumer'=>$costumer] )}}" method="POST" enctype="multipart/form-data" class="pb-5">
                 @method('PATCH')
                 @include('costumers.form')
             <button type="submit" class="btn btn-primary">Save Costumer</button>
