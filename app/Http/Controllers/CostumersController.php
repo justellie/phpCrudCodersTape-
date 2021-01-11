@@ -6,9 +6,11 @@ use App\Events\NewCostumerHasRegisteredEvent;
 use App\Models\Costumer;
 use App\Models\Company;
 
+
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-
+use Intervention\Image\Facades\Image;
 use function PHPUnit\Framework\returnSelf;
 
 class CostumersController extends Controller
@@ -21,9 +23,8 @@ class CostumersController extends Controller
 
     public function index()
     {
-        $costumers=Costumer::all();
-        $companies=Company::all();
-        return view('costumers.index',compact('costumers','companies'));
+        $costumers=Costumer::with('company')->paginate(15);
+        return view('costumers.index',compact('costumers'));
     }
     public function create()
     {
@@ -37,6 +38,7 @@ class CostumersController extends Controller
     }
     public function store()
     {
+        $this->authorize('create',Costumer::class);
         $data=$this->validateRequest();
 
 
@@ -50,6 +52,7 @@ class CostumersController extends Controller
     public function show(Costumer $costumer)
     {
        
+        $this->authorize('view',$costumer);
         return view('costumers.show',compact('costumer'));
         
     }
@@ -70,27 +73,21 @@ class CostumersController extends Controller
 
     private function validateRequest()
     {
-       return tap(request()->validate([
+       return request()->validate([
 
             'name'=>'required',
             'email'=>'required|email',
             'active'=>'required',
             'company_id'=>'required',
-
-            ]), function () {
-
-            if (request()->hasFile('image')) {
-                request()->validate([
-                    'image' => 'file|image|max:5000',
-                ]);
-            }
-
-            });
+            'image' => 'sometimes|file|image|max:5000',
+            ]);
                 
     }  
     public function destroy(Costumer $costumer) 
     {
+        $this->authorize('delete',$costumer);
         $costumer->delete();
+
         return redirect('/costumers');   
     }
     
@@ -101,7 +98,10 @@ class CostumersController extends Controller
             $costumer->update([
                 'image'=>request()->file('image')->store('uploads','public'),
             ]);
+            $image=Image::make(public_path('storage/' .$costumer->image))->fit(300,300);//corto
+            $image->save();
         }
+
     }
 
 }
